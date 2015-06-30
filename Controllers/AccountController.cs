@@ -12,6 +12,7 @@ using DeptEmpMgmt.Models;
 using System.Web.Security;
 using DeptEmpMgmt.CustomFilters;
 using System.Net.Mail;
+using System.Configuration;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
 //using DeptEmpMgmt.Logic;
