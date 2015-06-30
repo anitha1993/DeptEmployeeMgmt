@@ -16,12 +16,44 @@ namespace DeptEmpMgmt
 {
     public class EmailService : IIdentityMessageService
     {
+
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            // Credentials:
+            var credentialUserName = "mothisanithaaloysius@gmail.com";
+            var sentFrom = "mothisanithaaloysius@gmail.com";
+            var pwd = "amazinggrace";
+
+            // Configure the client:
+            System.Net.Mail.SmtpClient client =
+                new System.Net.Mail.SmtpClient("smtp.google.com");
+
+            client.Port = 587;
+            client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+
+            // Creatte the credentials:
+            System.Net.NetworkCredential credentials =
+                new System.Net.NetworkCredential(credentialUserName, pwd);
+
+            client.EnableSsl = true;
+            client.Credentials = credentials;
+
+            // Create the message:
+            var mail =
+                new System.Net.Mail.MailMessage(sentFrom, message.Destination);
+
+            mail.Subject = message.Subject;
+            mail.Body = message.Body;
+
+            // Send:
+            return client.SendMailAsync(mail);
+
+           
         }
+
     }
+
 
     public class SmsService : IIdentityMessageService
     {
@@ -53,11 +85,11 @@ namespace DeptEmpMgmt
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                ////RequiredLength = 6,
+                ////RequireNonLetterOrDigit = true,
+                ////RequireDigit = true,
+                ////RequireLowercase = true,
+                ////RequireUppercase = true,
             };
 
             // Configure user lockout defaults

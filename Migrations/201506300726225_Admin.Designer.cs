@@ -7,13 +7,13 @@ namespace DeptEmpMgmt.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
-    public sealed partial class init : IMigrationMetadata
+    public sealed partial class Admin : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Admin));
         
         string IMigrationMetadata.Id
         {
-            get { return "201506130958092_init"; }
+            get { return "201506300726225_Admin"; }
         }
         
         string IMigrationMetadata.Source

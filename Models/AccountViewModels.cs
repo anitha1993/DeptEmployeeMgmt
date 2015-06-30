@@ -51,7 +51,7 @@ namespace DeptEmpMgmt.Models
     {
         [Required]
         [Display(Name = "User Name")]
-       // [EmailAddress]
+        // [EmailAddress]
         public string UserName { get; set; }
 
         [Required]
@@ -61,10 +61,15 @@ namespace DeptEmpMgmt.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+        public virtual Employee Employees { get; set; }
     }
     [AuthLog(Roles = "Admin")]
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "User Name")]
+
+        public string UserName { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -80,7 +85,12 @@ namespace DeptEmpMgmt.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        public string Name { get; set; }
+        public string Roles { get; set; }
+       
+        [Display(Name = "Department Id")]
+        public int DepartmentId { get; set; }
+       // public string DepartmentName { get; set; }
+        public virtual Department Departments { get; set; }
     }
 
     public class ResetPasswordViewModel

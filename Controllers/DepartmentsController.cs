@@ -17,14 +17,17 @@ namespace DeptEmpMgmt.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Departments
-        [AuthLog(Roles = "Admin, User")]
+         [AuthLog(Roles = "Admin, Employee")]
+       // [Authorize(Roles = "Admin, Employee")]
+
         public ActionResult Index()
         {
             return View(db.Departments.ToList());
         }
 
         // GET: Departments/Details/5
-        [AuthLog(Roles = "Admin")]
+        // [AuthLog(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Employee")]
         public ActionResult Details(int? id)
         {
             if (id == null)

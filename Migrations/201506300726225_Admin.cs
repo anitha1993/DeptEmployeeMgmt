@@ -3,7 +3,7 @@ namespace DeptEmpMgmt.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class seed : DbMigration
+    public partial class Admin : DbMigration
     {
         public override void Up()
         {

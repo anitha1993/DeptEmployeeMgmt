@@ -30,9 +30,9 @@
                         <li>@Html.ActionLink("ViewEmp", "Index", "Employees")</li>
                         if (User.IsInRole("Admin"))
                         {
-                            <li>@Html.ActionLink("CreateRole", "Index", "Role")</li>
+                           <li>@Html.ActionLink("CreateRole", "Index", "Role")</li>
                             <li>@Html.ActionLink("CreateDept", "Create", "Departments")</li>
-                            <li>@Html.ActionLink("CreateEmp", "Create", "Employees")</li>
+                            <li>@Html.ActionLink("CreateUser", "CreateEmployee", "Account")</li>
                             <li>@Html.ActionLink("Register", "Register", "Account")</li>
                         }
 

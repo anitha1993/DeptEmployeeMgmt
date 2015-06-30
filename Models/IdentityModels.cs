@@ -3,15 +3,18 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using DeptEmpMgmt.Migrations;
+//using DeptEmpMgmt.Migrations;
 using DeptEmpMgmt.Models;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace DeptEmpMgmt.Models
 {
 
     public class ApplicationUser : IdentityUser
     {
-        public virtual Employee Employees{ get; set; }
+        [ForeignKey("DepartmentId")]
+        public int DepartmentId;
+        public virtual Department Departments { get; set; }
+        public string RandomPassword { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
 
@@ -25,12 +28,13 @@ namespace DeptEmpMgmt.Models
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+           // Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
 
         }
-       
+
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
+
         // public DbSet<UserInfo> UserInfo { get; set; }
 
         public static void Initialize()
@@ -67,11 +71,10 @@ namespace DeptEmpMgmt.Models
         }
         public static ApplicationDbContext Create()
         {
-            
-          
+
             return new ApplicationDbContext();
 
-
         }
+
     }
 }

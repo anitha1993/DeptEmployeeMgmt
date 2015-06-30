@@ -1,11 +1,11 @@
-﻿@model DeptEmpMgmt.Models.Employee
+﻿@model DeptEmpMgmt.Models.ApplicationUser
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "CreateEmployee";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>CreateEmployee</h2>
 
 @using (Html.BeginForm())
 {
@@ -29,25 +29,22 @@
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
+
+    
         @*<div class="form-group">
-                @Html.Label("User Type", new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.DropDownList("Roles")
-                </div>
-            </div>*@
-        <div class="form-group">
             @Html.LabelFor(model => model.DepartmentId, "Department", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
             </div>
-        </div>
-        <div class="form-group">
+        </div>*@
+
+        @*<div class="form-group">
             @Html.LabelFor(model => model.Roles, "Role", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("Roles", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select", htmlAttributes: new { @class = "form-control" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

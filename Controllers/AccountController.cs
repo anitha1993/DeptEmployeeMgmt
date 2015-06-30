@@ -11,10 +11,16 @@ using Microsoft.Owin.Security;
 using DeptEmpMgmt.Models;
 using System.Web.Security;
 using DeptEmpMgmt.CustomFilters;
+using System.Net.Mail;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Net;
+//using DeptEmpMgmt.Logic;
+
 
 namespace DeptEmpMgmt.Controllers
 {
     [Authorize]
+
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -120,10 +126,7 @@ namespace DeptEmpMgmt.Controllers
                 return View(model);
             }
 
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
-            // You can configure the account lockout settings in IdentityConfig
+
             var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
@@ -144,40 +147,153 @@ namespace DeptEmpMgmt.Controllers
         [AuthLog(Roles = "Admin")]
         public ActionResult Register()
         {
-            ViewBag.Name = new SelectList(context.Roles.ToList(), "Name", "Name");
+            //var list = context.Roles.OrderBy(r => r.Name).ToList().Select(rr => new SelectListItem { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
+            //ViewBag.Roles = list;
+            ViewBag.Roles = new SelectList(context.Roles.ToList(), "Name", "Name");
+            ViewBag.Departments = new SelectList(context.Departments.ToList(), "DepartmentId", "DepartmentName");
             return View();
         }
 
+        //Working fine//
+        //POST: /Account/Register
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Register(RegisterViewModel model, string RoleName)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
 
+        //        var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
+        //        // dept.DepartmentName = model.Departments.DepartmentName;
+        //        var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, DepartmentId = model.DepartmentId, Departments = dept };
+        //        var result = await UserManager.CreateAsync(user, model.Password);
+        //        var roleStore = new RoleStore<IdentityRole>(context);
+        //        var roleManager = new RoleManager<IdentityRole>(roleStore);
+        //        var userStore = new UserStore<ApplicationUser>(context);
+        //        var userManager = new UserManager<ApplicationUser>(userStore);
+        //        UserManager.AddToRole(user.Id, RoleName);
+        //        if (result.Succeeded)
+        //        {
+        //            return RedirectToAction("Index", "Home");
+        //        }
+        //        ViewBag.DepartmentId = new SelectList(context.Departments, "DepartmentId", "DepartmentName", model.DepartmentId);
+        //        //return View("Index");
+        //        AddErrors(result);
+        //    }
+
+        //    // If we got this far, something failed, redisplay form
+        //    return View(model);
+
+        //}
+        //Working fine|//
         //POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, string Roles)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                //var dept = context.Departments.Find(model.DepartmentId);
+               var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Departments = dept };//  };
+               // string password = GenerateRandomPassword(user);
+              
+                //string sendEmail = ConfigurationManager.AppSettings["SendEmail"];
+               // SendMail(Email, sendEmail, password);
+
+
+                // dept.DepartmentName = model.Departments.DepartmentName;
+               
                 var result = await UserManager.CreateAsync(user, model.Password);
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+                userManager.AddToRole(user.Id, Roles);
+                
                 if (result.Succeeded)
                 {
-
-                    //Assign Role to user Here 
-                    await this.UserManager.AddToRoleAsync(user.Id, model.Name);
-                    //Ends Here
-
-
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
                     return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+               // ViewBag.DepartmentId = new SelectList(context.Departments, "DepartmentId", "DepartmentName", model.DepartmentId);
+
+                //return View("Index");
+                //AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
+
         }
-        //
+        public ActionResult RoleAddToUser(string UserName, string RoleName)
+        {
+            var user = context.Users.FirstOrDefault(u => u.UserName.Equals(UserName, StringComparison.CurrentCultureIgnoreCase));
+            UserManager.AddToRole(user.Id, RoleName);
+            ViewBag.ResultMessage = "Role created successfully !";
+            // prepopulate roles for the view dropdown
+            var list = context.Roles.OrderBy(r => r.Name).ToList().Select(rr => new SelectListItem { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
+            ViewBag.Roles = list;
+
+            return View();
+        }
+
+        [AuthLog(Roles = "Admin")]
+        public ActionResult CreateEmployee()
+        {
+            ViewBag.DepartmentId = new SelectList(context.Departments, "DepartmentId", "DepartmentName");
+            return View();
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult CreateEmployee(RegisterViewModel model, string department)
+        //{
+        //    using (var context = new ApplicationDbContext())
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+
+        //            var dept = new Department();
+        //            dept.DepartmentId = model.DepartmentId;
+        //            department = model.Departments.DepartmentName;
+        //            //dept.DepartmentName = user.Departments.DepartmentName;
+
+        //            //var dept = new Department();
+        //            //user = new ApplicationUser { UserName = user.UserName, Email = user.Email };
+        //            //dept.DepartmentId = user.DepartmentId;
+        //            //department = user.Departments.DepartmentName;
+
+        //            //dept.DepartmentName = user.Departments.DepartmentName;
+
+
+
+
+        //            //if (result.Succeeded)
+        //            //{
+        //            //    return RedirectToAction("Index", "Home");
+        //            //}
+        //        }
+
+        //        // If we got this far, something failed, redisplay form
+        //        return View();
+        //    }
+
+
+
+        //}
+
+
+
+
+
+
+
+
+
+
+
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
@@ -420,6 +536,72 @@ namespace DeptEmpMgmt.Controllers
 
             base.Dispose(disposing);
         }
+        public void SendMail(string emailBody)
+        {
+            MailMessage mailMessage = new MailMessage("mothisanithaaloysius@gmail.com", "mothisanithaaloysius@gmail.com");
+
+
+            mailMessage.Subject = "User confirmation";
+            mailMessage.Body = string.Format("Thank you for your registration! Please login and change the password.");
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+            smtpClient.Credentials = new System.Net.NetworkCredential("mothisanithaaloysius@gmail.com", "amazinggrace");
+
+            smtpClient.EnableSsl = true;
+            smtpClient.Send(mailMessage);
+
+            // return RedirectToAction("Confirm", "Account", new { Email = user.Email
+            // });
+        }
+        public void SendMail(string Email, string emailBody, string password)
+        {
+            ApplicationUser user = new ApplicationUser();
+            SmtpClient smtpClient = new SmtpClient();
+            var mailMessage = new MailMessage(((NetworkCredential)(smtpClient.Credentials)).UserName, Email, "User confirmation", "Thank you for your registration! Your Password is <b>" + password + "</b> Please login and change the password.");
+            smtpClient.Send(mailMessage);
+        }
+        public string GenerateRandomPassword(ApplicationUser user)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            string PasswordLength = "12";
+            string NewPassword = "";
+            user.RandomPassword = NewPassword;
+
+            string allowedChars = "";
+            allowedChars = "1,2,3,4,5,6,7,8,9,0";
+            allowedChars += "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,";
+            allowedChars += "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,";
+            allowedChars += "~,!,@,#,$,%,^,&,*,+,?";
+
+            char[] sep = { ',' };
+            string[] arr = allowedChars.Split(sep);
+
+            string IDString = "";
+            string temp = "";
+
+            Random rand = new Random();
+
+            for (int i = 0; i < Convert.ToInt32(PasswordLength); i++)
+            {
+                temp = arr[rand.Next(0, arr.Length)];
+                IDString += temp;
+                NewPassword = IDString;
+            }
+            context.SaveChanges();
+
+            user.RandomPassword = NewPassword;
+            context.Users.Add(user);
+
+            // var employeeid = employee.EmployeeId;
+
+            context.SaveChanges();
+
+            return NewPassword;
+
+
+        }
+
+
 
         #region Helpers
         // Used for XSRF protection when adding external logins

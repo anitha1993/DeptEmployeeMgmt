@@ -165,36 +165,28 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="CustomFilters\AuthLogAttribute.cs" />
-    <Compile Include="DbInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Logic\RoleActions.cs" />
-    <Compile Include="Migrations\201506130941432_InitialCreate.cs" />
-    <Compile Include="Migrations\201506130941432_InitialCreate.Designer.cs">
-      <DependentUpon>201506130941432_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201506300523023_InitialCreate.cs" />
+    <Compile Include="Migrations\201506300523023_InitialCreate.Designer.cs">
+      <DependentUpon>201506300523023_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506130958092_init.cs" />
-    <Compile Include="Migrations\201506130958092_init.Designer.cs">
-      <DependentUpon>201506130958092_init.cs</DependentUpon>
+    <Compile Include="Migrations\201506300627351_Seed.cs" />
+    <Compile Include="Migrations\201506300627351_Seed.Designer.cs">
+      <DependentUpon>201506300627351_Seed.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201506161032563_seed.cs" />
-    <Compile Include="Migrations\201506161032563_seed.Designer.cs">
-      <DependentUpon>201506161032563_seed.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201506161132260_userinfo1.cs" />
-    <Compile Include="Migrations\201506161132260_userinfo1.Designer.cs">
-      <DependentUpon>201506161132260_userinfo1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201506161142198_employeeUser.cs" />
-    <Compile Include="Migrations\201506161142198_employeeUser.Designer.cs">
-      <DependentUpon>201506161142198_employeeUser.cs</DependentUpon>
+    <Compile Include="Migrations\201506300726225_Admin.cs" />
+    <Compile Include="Migrations\201506300726225_Admin.Designer.cs">
+      <DependentUpon>201506300726225_Admin.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MailReception.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -219,7 +211,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -234,7 +228,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Employees\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Departments\Create.cshtml" />
@@ -242,15 +236,17 @@
     <Content Include="Views\Departments\Details.cshtml" />
     <Content Include="Views\Departments\Edit.cshtml" />
     <Content Include="Views\Departments\Index.cshtml" />
-    <Content Include="Views\Employees\Create.cshtml" />
     <Content Include="Views\Employees\Delete.cshtml" />
-    <Content Include="Views\Employees\Details.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Shared\AuthorizeFailed.cshtml" />
     <Content Include="Views\Role\Create.cshtml" />
     <Content Include="Views\Role\Index.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Employees\SendPassword.cshtml" />
+    <Content Include="Views\Role\Edit.cshtml" />
+    <Content Include="Views\Role\ManageUserRoles.cshtml" />
+    <Content Include="Views\Role\RoleAddToUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -265,20 +261,14 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506130941432_InitialCreate.resx">
-      <DependentUpon>201506130941432_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506300523023_InitialCreate.resx">
+      <DependentUpon>201506300523023_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506130958092_init.resx">
-      <DependentUpon>201506130958092_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506300627351_Seed.resx">
+      <DependentUpon>201506300627351_Seed.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506161032563_seed.resx">
-      <DependentUpon>201506161032563_seed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506161132260_userinfo1.resx">
-      <DependentUpon>201506161132260_userinfo1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201506161142198_employeeUser.resx">
-      <DependentUpon>201506161142198_employeeUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201506300726225_Admin.resx">
+      <DependentUpon>201506300726225_Admin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
