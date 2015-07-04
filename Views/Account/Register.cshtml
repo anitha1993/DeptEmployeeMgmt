@@ -4,6 +4,7 @@
 }
 
 <h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.EmailSend</h2>
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
@@ -26,51 +27,23 @@
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <!--Select the Role Type for the User-->
-  <div class="form-group">
         @Html.LabelFor(model => model.Roles, "Role", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-           
             @Html.DropDownList("Roles", (IEnumerable<SelectListItem>)ViewBag.Roles, "Select", htmlAttributes: new { @class = "form-control" })
-        @*@Html.DropDownListFor(model => model.Roles, null)*@
-
-            @*@Html.DropDownList("Roles", (IEnumerable<SelectListItem>)ViewBag.Roles)*@
-
-
-        </div>
-    </div>  
-    <div class="form-group">
-        @Html.LabelFor(model => model.Departments, "DepartmentId", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @*@Html.DropDownList("Departments", null, htmlAttributes: new { @class = "form-control" })*@
-            @Html.DropDownList("DepartmentId", (IEnumerable<SelectListItem>)ViewBag.Departments, "Select", htmlAttributes: new { @class = "form-control" })
-
-
-
-
         </div>
     </div>
-
-    <!--Ends Here-->
+    <div class="form-group">
+        @Html.LabelFor(model => model.Department, "DepartmentId", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("DepartmentId", (IEnumerable<SelectListItem>)ViewBag.Departments, "Select", htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
 
     <div class="col-md-offset-2 col-md-10">
         <input type="submit" class="btn btn-default" value="Register" />
 
     </div>
-
-    }
-
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

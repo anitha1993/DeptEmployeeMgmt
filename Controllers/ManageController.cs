@@ -53,28 +53,28 @@ namespace SecondProject.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
-        {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : "";
+        //public async Task<ActionResult> Index(ManageMessageId? message)
+        //{
+        //    ViewBag.StatusMessage =
+        //        message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+        //        : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+        //        : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
+        //        : message == ManageMessageId.Error ? "An error has occurred."
+        //        : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
+        //        : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+        //        : "";
 
-            var userId = User.Identity.GetUserId();
-            //var model = new IndexViewModel
-            //{
-            //    HasPassword = HasPassword(),
-            //    PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-            //    TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-            //    Logins = await UserManager.GetLoginsAsync(userId),
-            //    BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            //};
-            return View(model);
-        }
+        //    var userId = User.Identity.GetUserId();
+        //    var model = new IndexViewModel
+        //    {
+        //        HasPassword = HasPassword(),
+        //        PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
+        //        TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
+        //        Logins = await UserManager.GetLoginsAsync(userId),
+        //        BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+        //    };
+        //    return View(model);
+        //}
 
         //
         // POST: /Manage/RemoveLogin
@@ -219,41 +219,41 @@ namespace SecondProject.Controllers
             return View();
         }
 
-        //
-        // POST: /Manage/ChangePassword
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-        //    var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-        //    if (result.Succeeded)
-        //    {
-        //        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-        //        if (user != null)
-        //        {
-        //            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-        //        }
-        //        return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-        //    }
-        //    AddErrors(result);
-        //    return View(model);
-        //}
+
+       // POST: /Manage/ChangePassword
+       [HttpPost]
+       [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+            }
+            AddErrors(result);
+            return View(model);
+        }
+
+
+//        GET: /Manage/SetPassword
+        public ActionResult SetPassword()
+        {
+            return View();
+        }
 
         //
-        // GET: /Manage/SetPassword
-        //public ActionResult SetPassword()
-        //{
-        //    return View();
-        //}
-
-        ////
-        //// POST: /Manage/SetPassword
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        // POST: /Manage/SetPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         //public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
         //{
         //    if (ModelState.IsValid)
@@ -300,8 +300,8 @@ namespace SecondProject.Controllers
 
         //
         // POST: /Manage/LinkLogin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+       // [HttpPost]
+        //[ValidateAntiForgeryToken]
         //public ActionResult LinkLogin(string provider)
         //{
         //    // Request a redirect to the external login provider to link a login for the current user

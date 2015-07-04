@@ -12,8 +12,10 @@ using DeptEmpMgmt.Models;
 using System.Web.Security;
 using DeptEmpMgmt.CustomFilters;
 using System.Net.Mail;
+using System.Configuration;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
+using System.Web.Services.Description;
 //using DeptEmpMgmt.Logic;
 
 
@@ -71,36 +73,73 @@ namespace DeptEmpMgmt.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            if (ModelState.IsValid)
+            {
+                var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+                var user = await UserManager.FindAsync(model.UserName, model.Password);
+                if (user != null)
+                {
+                    if (user.LoginCount == 0)
+                    {
+                        user.LoginCount += 1;
+                        UserManager.Update(user);
+                        return RedirectToAction("ChangePassword");
+                    }
+                    else
+                        return RedirectToLocal(returnUrl);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                }
+            }
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        {
+            var identity = await UserManager.CreateIdentityAsync(user,
+              DefaultAuthenticationTypes.ApplicationCookie);
+            AuthenticationManager.SignIn(new AuthenticationProperties()
+            {
+                IsPersistent = isPersistent
+            }, identity);
+        }
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
-            }
-        }
+                TempData["SuccessMsg"] = "Your Password is changed";
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            AddErrors(result);
+            return View(model);
+        }
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -140,53 +179,17 @@ namespace DeptEmpMgmt.Controllers
                     return View(model);
             }
         }
-
-
         //GET: /Account/Register
         [AllowAnonymous]
         [AuthLog(Roles = "Admin")]
         public ActionResult Register()
         {
-            //var list = context.Roles.OrderBy(r => r.Name).ToList().Select(rr => new SelectListItem { Value = rr.Name.ToString(), Text = rr.Name }).ToList();
-            //ViewBag.Roles = list;
             ViewBag.Roles = new SelectList(context.Roles.ToList(), "Name", "Name");
             ViewBag.Departments = new SelectList(context.Departments.ToList(), "DepartmentId", "DepartmentName");
             return View();
         }
 
-        //Working fine//
-        //POST: /Account/Register
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Register(RegisterViewModel model, string RoleName)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
 
-        //        var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
-        //        // dept.DepartmentName = model.Departments.DepartmentName;
-        //        var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, DepartmentId = model.DepartmentId, Departments = dept };
-        //        var result = await UserManager.CreateAsync(user, model.Password);
-        //        var roleStore = new RoleStore<IdentityRole>(context);
-        //        var roleManager = new RoleManager<IdentityRole>(roleStore);
-        //        var userStore = new UserStore<ApplicationUser>(context);
-        //        var userManager = new UserManager<ApplicationUser>(userStore);
-        //        UserManager.AddToRole(user.Id, RoleName);
-        //        if (result.Succeeded)
-        //        {
-        //            return RedirectToAction("Index", "Home");
-        //        }
-        //        ViewBag.DepartmentId = new SelectList(context.Departments, "DepartmentId", "DepartmentName", model.DepartmentId);
-        //        //return View("Index");
-        //        AddErrors(result);
-        //    }
-
-        //    // If we got this far, something failed, redisplay form
-        //    return View(model);
-
-        //}
-        //Working fine|//
         //POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
@@ -195,37 +198,34 @@ namespace DeptEmpMgmt.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var dept = context.Departments.Find(model.DepartmentId);
-               var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Departments = dept };//  };
-               // string password = GenerateRandomPassword(user);
-              
-                //string sendEmail = ConfigurationManager.AppSettings["SendEmail"];
-               // SendMail(Email, sendEmail, password);
+                var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
+                string password = GenerateRandomPassword(model);
+                model.DepartmentId = dept.DepartmentId;
+                model.Department.DepartmentName = dept.DepartmentName;
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, DepartmentId = dept.DepartmentId, RandomPassword = model.RandomPassword };
+                //  var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Department = dept, RandomPassword = model.RandomPassword };
 
-
-                // dept.DepartmentName = model.Departments.DepartmentName;
-               
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await UserManager.CreateAsync(user, password);
                 var roleStore = new RoleStore<IdentityRole>(context);
                 var roleManager = new RoleManager<IdentityRole>(roleStore);
                 var userStore = new UserStore<ApplicationUser>(context);
                 var userManager = new UserManager<ApplicationUser>(userStore);
                 userManager.AddToRole(user.Id, Roles);
-                
+
                 if (result.Succeeded)
                 {
+                    string Email = user.Email;
+                    string sendEmail = ConfigurationManager.AppSettings["SendEmail"];
+                    SendMail(Email, sendEmail, password);
+                    TempData["SuccessPwd"] = "Registration Successful. Password Sent!";
+                    context.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
-               // ViewBag.DepartmentId = new SelectList(context.Departments, "DepartmentId", "DepartmentName", model.DepartmentId);
-
-                //return View("Index");
                 //AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
-
         }
         public ActionResult RoleAddToUser(string UserName, string RoleName)
         {
@@ -536,37 +536,30 @@ namespace DeptEmpMgmt.Controllers
 
             base.Dispose(disposing);
         }
-        public void SendMail(string emailBody)
-        {
-            MailMessage mailMessage = new MailMessage("mothisanithaaloysius@gmail.com", "mothisanithaaloysius@gmail.com");
 
-
-            mailMessage.Subject = "User confirmation";
-            mailMessage.Body = string.Format("Thank you for your registration! Please login and change the password.");
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            smtpClient.Credentials = new System.Net.NetworkCredential("mothisanithaaloysius@gmail.com", "amazinggrace");
-
-            smtpClient.EnableSsl = true;
-            smtpClient.Send(mailMessage);
-
-            // return RedirectToAction("Confirm", "Account", new { Email = user.Email
-            // });
-        }
         public void SendMail(string Email, string emailBody, string password)
         {
             ApplicationUser user = new ApplicationUser();
             SmtpClient smtpClient = new SmtpClient();
-            var mailMessage = new MailMessage(((NetworkCredential)(smtpClient.Credentials)).UserName, Email, "User confirmation", "Thank you for your registration! Your Password is <b>" + password + "</b> Please login and change the password.");
+            var mailMessage = new MailMessage(((NetworkCredential)(smtpClient.Credentials)).UserName,
+                                             Email,
+                                             "User confirmation",
+                                             "Thank you for your registration! Your Password is <b>" + password + ".</b> Please <a href= \" http://10.1.81.27/DeptEmpMgmt/Account/Login\">Login Here.</a>");
+
+
+
+            mailMessage.IsBodyHtml = true;
+            mailMessage.CC.Add("anitha@promactinfo.com");
             smtpClient.Send(mailMessage);
         }
-        public string GenerateRandomPassword(ApplicationUser user)
+        public string GenerateRandomPassword(RegisterViewModel model)
         {
             ApplicationDbContext context = new ApplicationDbContext();
 
             string PasswordLength = "12";
             string NewPassword = "";
-            user.RandomPassword = NewPassword;
-
+            // model.RandomPassword = NewPassword;
+            //            model.Password = NewPassword;
             string allowedChars = "";
             allowedChars = "1,2,3,4,5,6,7,8,9,0";
             allowedChars += "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,";
@@ -587,10 +580,11 @@ namespace DeptEmpMgmt.Controllers
                 IDString += temp;
                 NewPassword = IDString;
             }
-            context.SaveChanges();
+            // context.SaveChanges();
 
-            user.RandomPassword = NewPassword;
-            context.Users.Add(user);
+            model.RandomPassword = NewPassword;
+            model.Password = NewPassword;
+            //Add this with user            context.Users.Add(model);
 
             // var employeeid = employee.EmployeeId;
 
@@ -660,6 +654,7 @@ namespace DeptEmpMgmt.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+
         #endregion
     }
 }

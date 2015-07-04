@@ -13,8 +13,9 @@ namespace DeptEmpMgmt.Models
     {
         [ForeignKey("DepartmentId")]
         public int DepartmentId;
-        public virtual Department Departments { get; set; }
+        public virtual Department Department { get; set; }
         public string RandomPassword { get; set; }
+        public int LoginCount { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
 

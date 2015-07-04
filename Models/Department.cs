@@ -19,8 +19,7 @@ namespace DeptEmpMgmt.Models
         [Required]
         public string DepartmentName { get; set; }
 
-       
-
+        public virtual ICollection<ApplicationUser> Users{ get; set; }
         //  public virtual ApplicationUser ApplicationUser { get; set; }
         // public virtual ICollection<Employee> Employees { get; set; }
     }

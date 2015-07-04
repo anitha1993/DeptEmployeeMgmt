@@ -1,4 +1,4 @@
-﻿@model DeptEmpMgmt.Models.Employee
+﻿@model DeptEmpMgmt.Models.ApplicationUser
 
 @{
     ViewBag.Title = "Details";
@@ -12,11 +12,12 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+
+            @Html.DisplayNameFor(model => model.Departments.DepartmentName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Department.DepartmentName)
+            @Html.DisplayFor(model => model.Departments.DepartmentName)
         </dd>
 
         <dt>
@@ -32,7 +33,7 @@
 <p>
 
 
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EmployeeId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 
 </p>
