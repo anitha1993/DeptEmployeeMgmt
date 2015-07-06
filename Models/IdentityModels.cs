@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-//using DeptEmpMgmt.Migrations;
+using DeptEmpMgmt.Migrations;
 using DeptEmpMgmt.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace DeptEmpMgmt.Models
@@ -11,9 +11,11 @@ namespace DeptEmpMgmt.Models
 
     public class ApplicationUser : IdentityUser
     {
-        [ForeignKey("DepartmentId")]
+        [ForeignKey("Department")]
         public int DepartmentId;
-        public virtual Department Department { get; set; }
+       // public string DepartmentName;
+      //  public virtual Department Department { get; set; }
+      public Department Department { get; set; }
         public string RandomPassword { get; set; }
         public int LoginCount { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -29,14 +31,14 @@ namespace DeptEmpMgmt.Models
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
-           // Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
 
         }
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
 
-        // public DbSet<UserInfo> UserInfo { get; set; }
+       
 
         public static void Initialize()
         {

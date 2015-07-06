@@ -81,16 +81,13 @@ namespace DeptEmpMgmt.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-      //  [DataType(DataType.Password)]
-       // [Display(Name = "Confirm password")]
-       // [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         public string Roles { get; set; }
         public string RandomPassword { get; set; }
 
-        [Display(Name = "Department Id")]
+     //   [Display(Name = "Department Id")]
         public int DepartmentId { get; set; }
-       // public string DepartmentName { get; set; }
+
         public virtual Department Department { get; set; }
     }
 

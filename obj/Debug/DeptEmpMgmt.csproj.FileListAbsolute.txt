@@ -59,9 +59,14 @@ C:\Users\chintan\Documents\Visual Studio 2015\Projects\DeptEmpMgmt\DeptEmpMgmt\o
 C:\Users\chintan\Documents\Visual Studio 2015\Projects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.pdb
 C:\Users\chintan\Documents\Visual Studio 2015\Projects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.employeeUser.resources
 C:\Users\chintan\Documents\Visual Studio 2015\Projects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.csprojResolveAssemblyReference.cache
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\DeptEmpMgmt.dll.config
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\DeptEmpMgmt.dll
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\DeptEmpMgmt.pdb
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.InitialCreate.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.Seed.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.Admin.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.password.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.AspnetUsers.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.LoginCount.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.Department.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.csproj.GenerateResource.Cache
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\Antlr3.Runtime.dll
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\EntityFramework.dll
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\EntityFramework.SqlServer.dll
@@ -111,14 +116,9 @@ C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\Microsoft.Owin.Security.OAuth.xml
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\Microsoft.Owin.Security.Google.xml
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\Microsoft.Owin.Security.Twitter.xml
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.csprojResolveAssemblyReference.cache
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.InitialCreate.resources
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.Seed.resources
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.Admin.resources
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.password.resources
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.AspnetUsers.resources
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.LoginCount.resources
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.csproj.GenerateResource.Cache
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.dll
 C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.pdb
-C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.Migrations.Department.resources
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\DeptEmpMgmt.dll.config
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\DeptEmpMgmt.dll
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\bin\DeptEmpMgmt.pdb
+C:\MyProjects\DeptEmpMgmt\DeptEmpMgmt\obj\Debug\DeptEmpMgmt.csprojResolveAssemblyReference.cache

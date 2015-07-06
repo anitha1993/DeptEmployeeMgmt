@@ -16,6 +16,8 @@ using System.Configuration;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
 using System.Web.Services.Description;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects.DataClasses;
 //using DeptEmpMgmt.Logic;
 
 
@@ -198,13 +200,12 @@ namespace DeptEmpMgmt.Controllers
         {
             if (ModelState.IsValid)
             {
-                var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
-                string password = GenerateRandomPassword(model);
-                model.DepartmentId = dept.DepartmentId;
-                model.Department.DepartmentName = dept.DepartmentName;
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, DepartmentId = dept.DepartmentId, RandomPassword = model.RandomPassword };
-                //  var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Department = dept, RandomPassword = model.RandomPassword };
 
+                var dept = context.Departments.Where(x => x.DepartmentId == model.DepartmentId).FirstOrDefault();
+
+                string password = GenerateRandomPassword(model);
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, RandomPassword = model.RandomPassword, Department = dept }; // Department = dept 
+                context.Users.Include(e => e.Department);
                 var result = await UserManager.CreateAsync(user, password);
                 var roleStore = new RoleStore<IdentityRole>(context);
                 var roleManager = new RoleManager<IdentityRole>(roleStore);
@@ -244,6 +245,37 @@ namespace DeptEmpMgmt.Controllers
         {
             ViewBag.DepartmentId = new SelectList(context.Departments, "DepartmentId", "DepartmentName");
             return View();
+        }
+
+
+
+        [AuthLog(Roles = "Admin, Employee")]
+
+        public ActionResult Index()
+        {
+
+
+            var users = context.Users.Include(e => e.Department);
+            // var departments = context.Departments.Include(d => d.Users).ToList();
+            return View(users.ToList());
+
+        }
+
+        // GET: Employees/Details/5
+        [AuthLog(Roles = "Admin, Employee")]
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            //Employee employee = context.Employees.Find(id);
+            ApplicationUser user = context.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
         }
 
         //[HttpPost]
